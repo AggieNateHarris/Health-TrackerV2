@@ -7,9 +7,10 @@
 
 newEntry::newEntry()
 {
-	std::cout << "Enter, in order, weight, BF%, Muscle%, PL Total, Water%.\n";
-	double weight, bf, muscle, total, water;
-	std::cin >> weight >> bf >> muscle >> total >> water;
+	std::cout << "Enter, in order, weight, BF%, Muscle%, PL Total, Water%, date.\n";
+	double weight, bf, muscle, total, water, fatMass;
+	std::string date;
+	std::cin >> weight >> bf >> muscle >> total >> water >> date;
 	std::ofstream appendFile;
 	appendFile.open("weight.txt", std::ios_base::app);
 	if (!appendFile.is_open())
@@ -62,11 +63,27 @@ newEntry::newEntry()
 		std::cout << "Error opening wilks file.\n";
 	else
 	{
-		double wilks = total * 500;
-		double denominator = (-216.0475144) + (16.2606339 * weight) + (-.002388645 * weight * weight) + (-.00113732 * weight * weight * weight) +
-			((7.01863 / 1000000) * weight * weight * weight * weight) + ((-1.291 / 100000000) * weight * weight * weight * weight * weight);
+		double wilks = (total / 2.205) * 500;
+		double kgWeight = weight / 2.205;
+		double denominator = (-216.0475144) + (16.2606339 * kgWeight) + (-.002388645 * kgWeight * kgWeight) + (-.00113732 * kgWeight * kgWeight * kgWeight) +
+			((7.01863 / 1000000) * kgWeight * kgWeight * kgWeight * kgWeight) + ((-1.291 / 100000000) * kgWeight * kgWeight * kgWeight * kgWeight * kgWeight);
 		wilks /= denominator;
 		appendFile << wilks << " ";
 	}
+	appendFile.close();
+
+	appendFile.open("date.txt", std::ios_base::app);
+	if (!appendFile.is_open())
+		std::cout << "Error opening date file.\n";
+	else
+		appendFile << date << " ";
+	appendFile.close();
+
+	appendFile.open("fatMass.txt", std::ios_base::app);
+	if (!appendFile.is_open())
+		std::cout << "Error opening fatMass file.\n";
+	else
+		fatMass = weight * (bf / 100);
+		appendFile << fatMass << " ";
 	appendFile.close();
 }
